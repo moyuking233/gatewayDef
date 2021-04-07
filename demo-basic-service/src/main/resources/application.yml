@@ -1,0 +1,48 @@
+logging:
+  level:
+    org:
+      springframework: INFO
+      duncan:
+        ehr:
+          basic:
+            controller: DEBUG
+            dao: DEBUG
+server:
+  port: 8001
+
+spring:
+  application:
+    name: EHR-BASIC-SERVICE
+
+#  datasource:
+#    type: com.alibaba.druid.pool.DruidDataSource
+#    driver-class-name: com.mysql.cj.jdbc.Driver
+#    username: root
+#    url: jdbc:mysql://39.102.56.166:3306/ehr_basic?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+#    password: '@mysql123'
+
+mybatis:
+  mapperLocations: classpath:/mapper/**/*.xml
+  type-aliases-package: org.duncan.ehr.basic.entity
+
+eureka:
+  client:
+    register-with-eureka: true
+    #是否从EurekaServer抓取已有的注册信息,单机无所谓,集群必须设置为true配合ribbon使用负载均衡
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    instance-id: ehr-basic-service
+    #访问路径可以显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔.单位为秒(默认30 秒)
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳等待时间上限.单位为秒(默认90 秒),超时将剔除服务
+    lease-expiration-duration-in-seconds: 90
+security:
+  oauth2:
+    resource:
+      id: ehr-basic-service
+      user-info-uri: http://localhost:9527/auth/api/user
+      prefer-token-info: false

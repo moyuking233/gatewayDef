@@ -1,0 +1,56 @@
+server:
+  port: 9527
+spring:
+  redis:
+    host: '39.102.56.166'
+    port: '6379'
+    password: aliyunredis
+    database: 0
+    timeout: 5000
+  application:
+    name: EHR-GATEWAY-SERVER
+  cloud:
+    gateway:
+      discovery:
+        locator:
+          enabled: true #开启从注册中心动态创建路由的功能，利用微服务进行路由
+      routes:
+        - id: ehr-auth-server
+#          uri: http://localhost:8003
+          uri: lb://EHR-AUTH-SERVER
+          predicates:
+            - Path=/auth/**
+          filters:
+            - StripPrefix=1
+        - id: ehr-basic-service
+          uri: lb://EHR-BASIC-SERVICE
+          predicates:
+            - Path=/user/**
+          filters:
+            - StripPrefix=1
+
+eureka:
+  instance:
+    instance-id: ehr-gateway-server
+    #访问路径可以显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔.单位为秒(默认30 秒)
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳等待时间上限.单位为秒(默认90 秒),超时将剔除服务
+    lease-expiration-duration-in-seconds: 90
+  client:
+    service-url:
+      register-with-eureka: true
+      fetch-registry: true
+      defaultZone: http://localhost:7001/eureka
+
+
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:9527/auth/oauth/token
+      user-authorization-uri: http://localhost:9527/auth/oauth/authorize
+      client-id: web
+    resource:
+      user-info-uri:  http://localhost:9527/auth/api/user
+      prefer-token-info: false

@@ -1,0 +1,67 @@
+server:
+  port: 8003
+
+spring:
+  application:
+    name: EHR-AUTH-SERVER
+  redis:
+    database: 0
+    host: '39.102.56.166'
+    port: 6379
+    password: aliyunredis
+    jedis:
+      pool:
+        max-active: 8
+        max-idle: 8
+        min-idle: 0
+  datasource:
+    type: com.alibaba.druid.pool.DruidDataSource
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    username: root
+    url: jdbc:mysql://39.102.56.166:3306/login?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=UTF-8
+    password: '@mysql123'
+  druid:
+    initialSize: 5 #初始化连接大小
+    minIdle: 5     #最小连接池数量
+    maxActive: 20  #最大连接池数量
+    maxWait: 60000 #获取连接时最大等待时间，单位毫秒
+    timeBetweenEvictionRunsMillis: 60000 #配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒
+    minEvictableIdleTimeMillis: 300000   #配置一个连接在池中最小生存的时间，单位是毫秒
+    validationQuery: SELECT 1 from user  #测试连接
+    testWhileIdle: true                  #申请连接的时候检测，建议配置为true，不影响性能，并且保证安全性
+    testOnBorrow: false                  #获取连接时执行检测，建议关闭，影响性能
+    testOnReturn: false                  #归还连接时执行检测，建议关闭，影响性能
+    poolPreparedStatements: false        #是否开启PSCache，PSCache对支持游标的数据库性能提升巨大，oracle建议开启，mysql下建议关闭
+    maxPoolPreparedStatementPerConnectionSize: 20 #开启poolPreparedStatements后生效
+    filters: stat,wall,log4j #配置扩展插件，常用的插件有=>stat:监控统计  log4j:日志  wall:防御sql注入
+    connectionProperties: 'druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000' #通过connectProperties属性来打开mergeSql功能;慢SQL记录
+
+
+eureka:
+  client:
+    register-with-eureka: true
+    #是否从EurekaServer抓取已有的注册信息,单机无所谓,集群必须设置为true配合ribbon使用负载均衡
+    fetchRegistry: true
+    service-url:
+      defaultZone: http://localhost:7001/eureka
+  instance:
+    instance-id: ehr-auth-server
+    #访问路径可以显示IP地址
+    prefer-ip-address: true
+    #Eureka客户端向服务端发送心跳的时间间隔.单位为秒(默认30 秒)
+    lease-renewal-interval-in-seconds: 30
+    #Eureka服务端在收到最后一次心跳等待时间上限.单位为秒(默认90 秒),超时将剔除服务
+    lease-expiration-duration-in-seconds: 90
+
+
+mybatis:
+  type-aliases-package: org.duncan.demo.entity
+  configuration:
+    map-underscore-to-camel-case: true  #开启驼峰命名,l_name -> lName
+    jdbc-type-for-null: NULL
+    lazy-loading-enabled: true
+    aggressive-lazy-loading: true
+    cache-enabled: true #开启二级缓存
+    call-setters-on-nulls: true #map空列不显示问题
+  mapperLocations:
+    - classpath:/mapper/**/*.xml
