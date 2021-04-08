@@ -27,15 +27,16 @@ public class UserServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userDao.loadUserByUsername(username);
-        if (user != null)throw new UsernameNotFoundException("用户名不存在");
+        if (user == null)throw new UsernameNotFoundException("用户名不存在");
         Set<GrantedAuthority> grantedAuthorities = new HashSet<>();
         List<Role> roles = userDao.getRolesByUserId(user.getUserId());
         for (Role role : roles) {
             //角色必须是ROLE_开头，可以在数据库中设置
-            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getRoleName());
+            GrantedAuthority grantedAuthority = new SimpleGrantedAuthority(role.getRoleName().substring(5,role.getRoleName().length()));
             grantedAuthorities.add(grantedAuthority);
             //获取权限
-            for (Permission permission : role.getPermissions()) {
+            List<Permission> permissions = userDao.getPermissionsByRoleId(role.getRoleId());
+            for (Permission permission : permissions) {
                 GrantedAuthority authority = new SimpleGrantedAuthority(permission.getPermissionUrl());
                 grantedAuthorities.add(authority);
             }

@@ -1,3 +1,4 @@
+
 server:
   port: 8003
 
@@ -5,7 +6,7 @@ spring:
   application:
     name: EHR-AUTH-SERVER
   redis:
-    database: 0
+    database: 1
     host: '39.102.56.166'
     port: 6379
     password: aliyunredis
@@ -65,3 +66,14 @@ mybatis:
     call-setters-on-nulls: true #map空列不显示问题
   mapperLocations:
     - classpath:/mapper/**/*.xml
+
+security:
+  oauth2:
+    client:
+      access-token-uri: http://localhost:9527/auth/oauth/token
+      user-authorization-uri: http://localhost:9527/auth/oauth/authorize
+      client-id: web
+    resource:
+      user-info-uri:  http://localhost:9527/auth/api/user
+      prefer-token-info: false
+debug: true

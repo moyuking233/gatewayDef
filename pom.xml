@@ -14,6 +14,7 @@
         <module>demo-common</module>
         <module>demo-basic-service</module>
         <module>demo-eureka-server</module>
+        <module>demo-service2</module>
     </modules>
 
     <properties>

@@ -28,6 +28,12 @@ spring:
             - Path=/user/**
           filters:
             - StripPrefix=1
+        - id: ehr-xxx-service
+          uri: lb://EHR-XXX-SERVICE
+          predicates:
+            - Path=/xxx/**
+          filters:
+            - StripPrefix=1
 
 eureka:
   instance:
@@ -45,12 +51,4 @@ eureka:
       defaultZone: http://localhost:7001/eureka
 
 
-security:
-  oauth2:
-    client:
-      access-token-uri: http://localhost:9527/auth/oauth/token
-      user-authorization-uri: http://localhost:9527/auth/oauth/authorize
-      client-id: web
-    resource:
-      user-info-uri:  http://localhost:9527/auth/api/user
-      prefer-token-info: false
+
