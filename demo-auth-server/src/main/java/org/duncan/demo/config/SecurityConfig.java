@@ -2,11 +2,13 @@ package org.duncan.demo.config;
 
 import org.duncan.demo.service.impl.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
@@ -19,7 +21,6 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @Configuration
 @EnableWebSecurity
-@Order(2)
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     private UserServiceImpl userServiceImpl;
@@ -31,12 +32,13 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.requestMatchers().antMatchers("/oauth/**")
+        http.authorizeRequests()
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).permitAll()
+                .antMatchers("/rsa/publicKey").permitAll()
+                .anyRequest().authenticated()
                 .and()
-                .authorizeRequests()
-                .antMatchers("/oauth/**").authenticated()
-                .and()
-                .csrf().disable();
+                .csrf()
+                .disable();
     }
 
     @Override

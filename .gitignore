@@ -1,0 +1,6 @@
+# Project exclude paths
+/demo-auth-server/target/
+/demo-basic-service/target/
+/demo-common/target/
+/demo-eureka-server/target/
+/demo-gateway-server/target/

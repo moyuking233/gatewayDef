@@ -1,6 +1,11 @@
 server:
   port: 9527
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8003/rsa/publicKey' #配置RSA的公钥访问地址
   redis:
     host: '39.102.56.166'
     port: '6379'
@@ -50,5 +55,10 @@ eureka:
       fetch-registry: true
       defaultZone: http://localhost:7001/eureka
 
+secure:
+  ignore:
+    urls: #配置白名单路径
+      - "/actuator/**"
+      - "/auth/oauth/**"
 
-
+debug: true

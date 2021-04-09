@@ -29,15 +29,14 @@ public class UserController {
     }
 
     @DeleteMapping(value = "/exit")
-    public R revokeToken(String access_token) {
+    public R revokeToken(String jwt) {
         R r = new R();
-        if (consumerTokenServices.revokeToken(access_token)) {
+        if (consumerTokenServices.revokeToken(jwt)) {
             r.setCode(200);
             r.setMsg("注销成功");
-        } else {
-            r.setCode(500);
-            r.setMsg("注销失败");
         }
+        r.setCode(500);
+        r.setMsg("注销失败");
         return r;
     }
 

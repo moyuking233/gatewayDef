@@ -1,8 +1,11 @@
-
 server:
   port: 8003
-
 spring:
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          jwk-set-uri: 'http://localhost:8003/rsa/publicKey' #配置RSA的公钥访问地址
   application:
     name: EHR-AUTH-SERVER
   redis:
@@ -67,13 +70,4 @@ mybatis:
   mapperLocations:
     - classpath:/mapper/**/*.xml
 
-security:
-  oauth2:
-    client:
-      access-token-uri: http://localhost:9527/auth/oauth/token
-      user-authorization-uri: http://localhost:9527/auth/oauth/authorize
-      client-id: web
-    resource:
-      user-info-uri:  http://localhost:9527/auth/api/user
-      prefer-token-info: false
 debug: true

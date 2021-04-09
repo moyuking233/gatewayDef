@@ -25,4 +25,9 @@ public interface UserDao {
     @Update("update user set user_password = #{userPassword} where user_id = #{userId}")
     Integer updateUserPasswordByUserId(@Param("userPassword")String userPassword, @Param("userId") Integer userId);
 
+    @Select("select * from permission")
+    List<Permission> getAllPermissions();
+
+    @Select("select r.role_id,r.role_name from role r,role_permission rp where rp.permission_id = #{permissionId} and rp.role_id = r.role_id")
+    List<Role> getRolesByPermissionId(Integer permissionId);
 }
